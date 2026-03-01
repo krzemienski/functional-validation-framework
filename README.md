@@ -333,6 +333,23 @@ fvf validate --gate templates/api-gate.yaml
 
 ---
 
+## Troubleshooting
+
+### `fvf validate` fails with "no gates found"
+Ensure your gate YAML file path is correct: `fvf validate --gate ./gates.yaml`. Use `fvf gate list gates.yaml` to verify the file parses correctly.
+
+### Playwright not installed
+Run `playwright install chromium` after `pip install -e .`. The framework uses Playwright for browser-based validation.
+
+### Evidence directory not created
+The framework creates the evidence directory automatically. Ensure you have write permissions in the current directory, or specify a custom path: `--evidence-dir /path/to/evidence`.
+
+### Gate passes locally but fails in CI
+CI environments may not have browsers installed. Use `fvf validate --gate gates.yaml --type api` for API-only gates, or ensure Playwright browsers are installed in your CI image.
+
+### Screenshots are blank or black
+Increase the wait time in your gate configuration. The default screenshot delay may not be enough for pages with async content loading.
+
 ## License
 
 MIT © krzemienski
