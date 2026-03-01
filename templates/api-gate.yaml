@@ -1,0 +1,125 @@
+project: my-api
+
+# Set base URL in fvf.yaml: api_base_url: "http://localhost:9999"
+# Or override per-gate with validator_config.base_url
+
+gates:
+  - number: 1
+    name: Health Check
+    description: Verify the API server is running and healthy
+    criteria:
+      - description: Health endpoint returns 200 within 500ms
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /health
+          base_url: http://localhost:9999
+          expected_status: 200
+          max_response_time_ms: 500
+
+  - number: 2
+    name: Core Resource Endpoints
+    description: Verify primary REST resources return well-formed responses
+    depends_on: [1]
+    criteria:
+      - description: Sessions list returns an array
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /api/v1/sessions
+          base_url: http://localhost:9999
+          expected_status: 200
+          max_response_time_ms: 2000
+          assertions:
+            - type: json_key_exists
+              key: data
+            - type: json_path
+              path: $.data
+              expected_type: list
+
+      - description: Projects list returns an array
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /api/v1/projects
+          base_url: http://localhost:9999
+          expected_status: 200
+          max_response_time_ms: 2000
+          assertions:
+            - type: json_key_exists
+              key: data
+
+  - number: 3
+    name: Create Resource
+    description: Verify that POST endpoints accept valid payloads and return created resources
+    depends_on: [2]
+    criteria:
+      - description: Creating a new resource succeeds with 201
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: POST
+          path: /api/v1/sessions
+          base_url: http://localhost:9999
+          expected_status: 201
+          max_response_time_ms: 3000
+          body:
+            title: Validation Test Session
+            description: Created by functional-validation-framework
+          assertions:
+            - type: json_key_exists
+              key: id
+            - type: json_key_exists
+              key: title
+
+  - number: 4
+    name: Error Handling
+    description: Verify that invalid requests return proper error codes and messages
+    depends_on: [1]
+    criteria:
+      - description: Non-existent resource returns 404
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /api/v1/sessions/00000000-0000-0000-0000-000000000000
+          base_url: http://localhost:9999
+          expected_status: 404
+          max_response_time_ms: 1000
+
+      - description: Malformed request returns 400 or 422
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: POST
+          path: /api/v1/sessions
+          base_url: http://localhost:9999
+          expected_status: 422
+          max_response_time_ms: 1000
+          body:
+            invalid_field_that_does_not_exist: true
+
+  - number: 5
+    name: Performance Under Load
+    description: Verify key endpoints respond within budget across multiple requests
+    depends_on: [2]
+    criteria:
+      - description: Sessions list p99 under 200ms
+        evidence_required:
+          - curl_output
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /api/v1/sessions
+          base_url: http://localhost:9999
+          expected_status: 200
+          max_response_time_ms: 200

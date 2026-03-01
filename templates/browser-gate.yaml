@@ -1,0 +1,107 @@
+project: my-web-app
+
+gates:
+  - number: 1
+    name: Homepage Renders
+    description: Verify the homepage loads and displays key content correctly
+    criteria:
+      - description: Homepage returns 200 and shows welcome message
+        evidence_required:
+          - screenshot
+          - curl_output
+        validator_type: browser
+        validator_config:
+          url: http://localhost:3000
+          assertions:
+            - type: status_code
+              expected: 200
+            - type: element_visible
+              selector: h1.welcome
+            - type: text_content
+              selector: h1.welcome
+              expected: Welcome
+
+  - number: 2
+    name: Navigation Works
+    description: Verify all primary navigation links are functional and render correct pages
+    depends_on: [1]
+    criteria:
+      - description: About page reachable via nav link
+        evidence_required:
+          - screenshot
+        validator_type: browser
+        validator_config:
+          url: http://localhost:3000
+          actions:
+            - type: click
+              selector: nav a[href="/about"]
+            - type: wait
+              duration: 1000
+          assertions:
+            - type: element_visible
+              selector: .about-page
+            - type: status_code
+              expected: 200
+
+      - description: Contact page reachable via nav link
+        evidence_required:
+          - screenshot
+        validator_type: browser
+        validator_config:
+          url: http://localhost:3000
+          actions:
+            - type: click
+              selector: nav a[href="/contact"]
+            - type: wait
+              duration: 1000
+          assertions:
+            - type: element_visible
+              selector: .contact-page
+
+  - number: 3
+    name: Forms Submit Correctly
+    description: Verify that the primary contact/signup form submits and shows confirmation
+    depends_on: [2]
+    criteria:
+      - description: Contact form submits successfully
+        evidence_required:
+          - screenshot
+        validator_type: browser
+        validator_config:
+          url: http://localhost:3000/contact
+          actions:
+            - type: fill
+              selector: input[name="name"]
+              value: Test User
+            - type: fill
+              selector: input[name="email"]
+              value: test@example.com
+            - type: fill
+              selector: textarea[name="message"]
+              value: This is a functional validation test message.
+            - type: click
+              selector: button[type="submit"]
+            - type: wait
+              duration: 2000
+          assertions:
+            - type: element_visible
+              selector: .success-message
+            - type: text_content
+              selector: .success-message
+              expected: Thank you
+
+  - number: 4
+    name: Performance Baseline
+    description: Verify page load times are within acceptable bounds
+    depends_on: [1]
+    criteria:
+      - description: Homepage loads within 3 seconds
+        evidence_required:
+          - screenshot
+        validator_type: api
+        validator_config:
+          method: GET
+          path: /
+          base_url: http://localhost:3000
+          expected_status: 200
+          max_response_time_ms: 3000

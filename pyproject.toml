@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "functional-validation-framework"
+version = "0.1.0"
+description = "A pip-installable framework for functional validation in AI-assisted development. No mocks — real systems, real evidence."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "krzemienski" }
+]
+keywords = ["validation", "testing", "ai", "ios", "browser", "functional-testing", "evidence"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Quality Assurance",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1",
+    "pydantic>=2.0",
+    "httpx>=0.25",
+    "playwright>=1.40",
+    "Pillow>=10.0",
+    "rich>=13.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "black>=23.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+fvf = "fvf.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/krzemienski/functional-validation-framework"
+Repository = "https://github.com/krzemienski/functional-validation-framework"
+Issues = "https://github.com/krzemienski/functional-validation-framework/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.fvf]
+evidence_dir = "./evidence"
+screenshot_format = "png"
+browser_timeout = 30000
+gate_retry_limit = 3
+parallel_gates = false
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true

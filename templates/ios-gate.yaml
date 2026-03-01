@@ -1,0 +1,103 @@
+project: my-ios-app
+
+# iOS simulator UDID — set this to your dedicated simulator
+# Find with: xcrun simctl list devices
+# Or set in fvf.yaml: ios_simulator_udid: "YOUR-UDID-HERE"
+
+gates:
+  - number: 1
+    name: App Launches
+    description: Verify the app launches cleanly and displays the home screen
+    criteria:
+      - description: Home screen is visible with key UI elements
+        evidence_required:
+          - screenshot
+          - accessibility_tree
+        validator_type: ios
+        validator_config:
+          deep_link: myapp://home
+          assertions:
+            - type: element_present
+              label: Home
+            - type: element_present
+              label: Settings
+
+  - number: 2
+    name: Navigation Works
+    description: Verify primary navigation routes function correctly
+    depends_on: [1]
+    criteria:
+      - description: Sessions screen reachable and populated
+        evidence_required:
+          - screenshot
+          - accessibility_tree
+        validator_type: ios
+        validator_config:
+          deep_link: myapp://sessions
+          assertions:
+            - type: element_present
+              label: Sessions
+            - type: element_absent
+              label: Error
+
+      - description: Settings screen opens from deep link
+        evidence_required:
+          - screenshot
+          - accessibility_tree
+        validator_type: ios
+        validator_config:
+          deep_link: myapp://settings
+          assertions:
+            - type: element_present
+              label: Settings
+
+  - number: 3
+    name: Core Feature Works
+    description: Verify the primary user action completes successfully
+    depends_on: [2]
+    criteria:
+      - description: New session can be created
+        evidence_required:
+          - screenshot
+          - accessibility_tree
+        validator_type: ios
+        validator_config:
+          deep_link: myapp://sessions
+          actions:
+            - type: wait
+              duration_ms: 1000
+            - type: tap
+              x: 350
+              y: 80
+          assertions:
+            - type: element_present
+              label: New Session
+
+  - number: 4
+    name: Sidebar Navigation
+    description: Verify the sidebar opens and all nav items are present
+    depends_on: [1]
+    criteria:
+      - description: Sidebar reveals on swipe from left edge
+        evidence_required:
+          - screenshot
+          - accessibility_tree
+        validator_type: ios
+        validator_config:
+          deep_link: myapp://home
+          actions:
+            - type: wait
+              duration_ms: 500
+            - type: swipe
+              start_x: 5
+              start_y: 500
+              end_x: 300
+              end_y: 500
+              duration: 0.3
+            - type: wait
+              duration_ms: 800
+          assertions:
+            - type: element_present
+              label: Home
+            - type: element_present
+              label: Settings
