@@ -1,0 +1,47 @@
+flowchart LR
+    subgraph unit_test_path ["Unit Test Path"]
+        direction TB
+        UT_Write["Developer writes code"]
+        UT_AI["AI generates tests"]
+        UT_Run["Tests execute in isolation"]
+        UT_Mock["Mocked dependencies"]
+        UT_Pass["All tests pass ✓"]
+        UT_Ship["Ship to production"]
+        UT_Bug["Bug found by user ✗"]
+
+        UT_Write --> UT_AI
+        UT_AI --> UT_Run
+        UT_Run --> UT_Mock
+        UT_Mock --> UT_Pass
+        UT_Pass --> UT_Ship
+        UT_Ship --> UT_Bug
+    end
+
+    subgraph fv_path ["Functional Validation Path"]
+        direction TB
+        FV_Write["Developer writes code"]
+        FV_Build["Build real system"]
+        FV_Launch["Launch on device/simulator"]
+        FV_Navigate["Navigate real UI"]
+        FV_Assert["Assert on accessibility tree"]
+        FV_Screenshot["Capture screenshot evidence"]
+        FV_Report["Auditable evidence report"]
+
+        FV_Write --> FV_Build
+        FV_Build --> FV_Launch
+        FV_Launch --> FV_Navigate
+        FV_Navigate --> FV_Assert
+        FV_Assert --> FV_Screenshot
+        FV_Screenshot --> FV_Report
+    end
+
+    subgraph gap ["The Gap Unit Tests Miss"]
+        direction TB
+        G1["Visual rendering"]
+        G2["Integration boundaries"]
+        G3["State lifecycle"]
+        G4["Platform quirks"]
+    end
+
+    UT_Mock -.->|"Cannot detect"| gap
+    FV_Navigate -->|"Catches all four"| gap

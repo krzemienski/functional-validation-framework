@@ -1,0 +1,68 @@
+flowchart TD
+    subgraph capture ["1. Capture"]
+        direction TB
+        V_Browser["BrowserValidator\nPlaywright screenshot"]
+        V_iOS["IOSValidator\nsimctl screenshot\nidb accessibility tree"]
+        V_API["APIValidator\ncurl command + response"]
+        V_Screenshot["ScreenshotValidator\npixel comparison + diff"]
+    end
+
+    subgraph evidence_items ["2. EvidenceItem Creation"]
+        direction TB
+        EI["EvidenceItem\n- type: EvidenceType\n- path: Path\n- timestamp: datetime\n- metadata: dict"]
+    end
+
+    subgraph store ["3. Store"]
+        direction TB
+        EC["EvidenceCollector.collect()"]
+        Copy["shutil.copy2() to\ntimestamped directory"]
+        Dedup["Name collision\nresolution (counter)"]
+        Manifest["manifest.json\n- generated_at\n- item_count\n- items[]"]
+
+        EC --> Copy
+        Copy --> Dedup
+        Dedup --> Manifest
+    end
+
+    subgraph structure ["Directory Layout"]
+        direction TB
+        Root["evidence/"]
+        Gate1["gate-1/"]
+        TS1["20240101-120000/"]
+        TS2["20240101-143000/"]
+        Files1["manifest.json\nscreenshot-browser-1234.png\napi-curl-1234.txt"]
+        Files2["manifest.json\nios-screenshot-5678.png\nios-a11y-5678.json"]
+
+        Root --> Gate1
+        Gate1 --> TS1
+        Gate1 --> TS2
+        TS1 --> Files1
+        TS2 --> Files2
+    end
+
+    subgraph verify ["4. Verify & Report"]
+        direction TB
+        RG["ReportGenerator"]
+        MD["Markdown Report\nGitHub PR comments"]
+        JSON["JSON Report\nCI pipeline consumption"]
+        HTML["HTML Report\nBase64-embedded screenshots\nFully portable"]
+
+        RG --> MD
+        RG --> JSON
+        RG --> HTML
+    end
+
+    subgraph lifecycle ["5. Lifecycle"]
+        direction TB
+        List["list_all_gates()\nget_evidence(gate_number)"]
+        Latest["get_latest(gate_number)\nmost recent attempt"]
+        Cleanup["cleanup(keep_latest=3)\nprune old attempts"]
+
+        List --> Latest
+        Latest --> Cleanup
+    end
+
+    capture --> evidence_items
+    evidence_items --> store
+    store --> verify
+    store --> lifecycle
