@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <defs>
+    <style>
+      text { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    </style>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="350" fill="#0f172a"/>
+
+  <!-- Title bar -->
+  <rect width="600" height="52" fill="#111827"/>
+  <rect width="600" height="1" y="52" fill="#334155"/>
+  <text x="300" y="28" text-anchor="middle" fill="#f1f5f9" font-size="16" font-weight="700">Bug Categories Caught</text>
+  <text x="300" y="46" text-anchor="middle" fill="#64748b" font-size="10" letter-spacing="1">UNIT TESTS vs FUNCTIONAL VALIDATION</text>
+
+  <!-- Legend -->
+  <rect x="160" y="62" width="12" height="12" fill="#ef4444" rx="2"/>
+  <text x="178" y="73" fill="#94a3b8" font-size="11">Unit Tests</text>
+  <rect x="270" y="62" width="12" height="12" fill="#059669" rx="2"/>
+  <text x="288" y="73" fill="#94a3b8" font-size="11">Functional Validation</text>
+
+  <!-- Chart area: x from 60 to 580, y from 85 to 290 -->
+  <!-- Max value: 47. Chart height: 205px. Scale: 205/50 = 4.1px per unit -->
+
+  <!-- Y-axis grid lines and labels -->
+  <!-- 0 line -->
+  <line x1="60" y1="290" x2="580" y2="290" stroke="#1e293b" stroke-width="1"/>
+  <text x="50" y="294" text-anchor="end" fill="#475569" font-size="10">0</text>
+  <!-- 10 line -->
+  <line x1="60" y1="249" x2="580" y2="249" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="50" y="253" text-anchor="end" fill="#475569" font-size="10">10</text>
+  <!-- 20 line -->
+  <line x1="60" y1="208" x2="580" y2="208" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="50" y="212" text-anchor="end" fill="#475569" font-size="10">20</text>
+  <!-- 30 line -->
+  <line x1="60" y1="167" x2="580" y2="167" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="50" y="171" text-anchor="end" fill="#475569" font-size="10">30</text>
+  <!-- 40 line -->
+  <line x1="60" y1="126" x2="580" y2="126" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="50" y="130" text-anchor="end" fill="#475569" font-size="10">40</text>
+  <!-- 50 line -->
+  <line x1="60" y1="85" x2="580" y2="85" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="50" y="89" text-anchor="end" fill="#475569" font-size="10">50</text>
+
+  <!-- Y-axis line -->
+  <line x1="60" y1="82" x2="60" y2="292" stroke="#334155" stroke-width="1"/>
+
+  <!-- Scale: 205px / 50 max = 4.1px per unit -->
+  <!-- Bar group width: 520/4 = 130px each. Bar width: 40px each, gap 10px -->
+
+  <!-- Group 1: Visual Rendering — center at x=125 -->
+  <!-- Unit Tests: 0 → height=0, show tiny stub -->
+  <rect x="88" y="288" width="36" height="2" fill="#ef4444" rx="1"/>
+  <text x="106" y="283" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">0</text>
+  <!-- Functional Validation: 47 → height=47*4.1=192.7 -->
+  <rect x="132" y="97" width="36" height="193" fill="#059669" rx="3" filter="url(#glow)"/>
+  <rect x="132" y="97" width="36" height="20" fill="white" rx="3" opacity="0.08"/>
+  <text x="150" y="92" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">47</text>
+  <!-- X label -->
+  <text x="125" y="310" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="500">Visual</text>
+  <text x="125" y="323" text-anchor="middle" fill="#64748b" font-size="9">Rendering</text>
+
+  <!-- Group 2: Integration Boundary — center at x=255 -->
+  <!-- Unit Tests: 0 -->
+  <rect x="218" y="288" width="36" height="2" fill="#ef4444" rx="1"/>
+  <text x="236" y="283" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">0</text>
+  <!-- Functional Validation: 23 → height=23*4.1=94.3 -->
+  <rect x="262" y="196" width="36" height="94" fill="#059669" rx="3" filter="url(#glow)"/>
+  <rect x="262" y="196" width="36" height="16" fill="white" rx="3" opacity="0.08"/>
+  <text x="280" y="191" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">23</text>
+  <!-- X label -->
+  <text x="255" y="310" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="500">Integration</text>
+  <text x="255" y="323" text-anchor="middle" fill="#64748b" font-size="9">Boundary</text>
+
+  <!-- Group 3: State Management — center at x=385 -->
+  <!-- Unit Tests: 3 → height=3*4.1=12.3 -->
+  <rect x="348" y="278" width="36" height="12" fill="#ef4444" rx="2"/>
+  <text x="366" y="273" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">3</text>
+  <!-- Functional Validation: 31 → height=31*4.1=127.1 -->
+  <rect x="392" y="163" width="36" height="127" fill="#059669" rx="3" filter="url(#glow)"/>
+  <rect x="392" y="163" width="36" height="16" fill="white" rx="3" opacity="0.08"/>
+  <text x="410" y="158" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">31</text>
+  <!-- X label -->
+  <text x="385" y="310" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="500">State</text>
+  <text x="385" y="323" text-anchor="middle" fill="#64748b" font-size="9">Management</text>
+
+  <!-- Group 4: Platform-Specific — center at x=515 -->
+  <!-- Unit Tests: 0 -->
+  <rect x="478" y="288" width="36" height="2" fill="#ef4444" rx="1"/>
+  <text x="496" y="283" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">0</text>
+  <!-- Functional Validation: 18 → height=18*4.1=73.8 -->
+  <rect x="522" y="216" width="36" height="74" fill="#059669" rx="3" filter="url(#glow)"/>
+  <rect x="522" y="216" width="36" height="14" fill="white" rx="3" opacity="0.08"/>
+  <text x="540" y="211" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">18</text>
+  <!-- X label -->
+  <text x="515" y="310" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="500">Platform-</text>
+  <text x="515" y="323" text-anchor="middle" fill="#64748b" font-size="9">Specific</text>
+
+  <!-- Footer note -->
+  <text x="300" y="343" text-anchor="middle" fill="#475569" font-size="10">Numbers represent bugs found per category across 90-day period</text>
+</svg>

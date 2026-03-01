@@ -1,0 +1,32 @@
+flowchart TD
+    GateYAML[Gate YAML Definition] --> GateRunner[GateRunner]
+
+    GateRunner --> V_Browser[Browser Validator]
+    GateRunner --> V_iOS[iOS Validator]
+    GateRunner --> V_API[API Validator]
+    GateRunner --> V_Screenshot[Screenshot Validator]
+
+    subgraph validators [Validators]
+        V_Browser
+        V_iOS
+        V_API
+        V_Screenshot
+    end
+
+    V_Browser --> EI_Browser[EvidenceItem: browser]
+    V_iOS --> EI_iOS[EvidenceItem: ios]
+    V_API --> EI_API[EvidenceItem: api]
+    V_Screenshot --> EI_Screenshot[EvidenceItem: screenshot]
+
+    EI_Browser --> Collector[EvidenceCollector]
+    EI_iOS --> Collector
+    EI_API --> Collector
+    EI_Screenshot --> Collector
+
+    Collector --> TSDir["Timestamped Directory\nevidence/YYYYMMDD-HHMMSS/"]
+
+    TSDir --> ReportGen[ReportGenerator]
+
+    ReportGen --> Out_MD[Markdown Report]
+    ReportGen --> Out_JSON[JSON Report]
+    ReportGen --> Out_HTML[HTML Report]
